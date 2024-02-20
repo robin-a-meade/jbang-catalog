@@ -3,9 +3,18 @@
 # Please see the documentation for all configuration options:
 # https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 
+# Robin Feb 19, 2024:
+# dependabot seems to support only one pom file, named `pom.xml`, per directory
+#
+# - Spec multiple directories for one package-ecosystem · Issue #3951 · dependabot/dependabot-core
+#   https://github.com/dependabot/dependabot-core/issues/3951
+
+# - How to add multiple directories in dependabot.yml config file? · Issue #2824 · dependabot/dependabot-core
+#   https://github.com/dependabot/dependabot-core/issues/2824
+
 version: 2
 updates:
-  - package-ecosystem: "maven" # See documentation for possible values
-    directory: "/generated_pom_files_for_aliases" # Location of package manifests
+  - package-ecosystem: "maven"
+    directory: "/generated_pom_files_for_aliases/sqlline"
     schedule:
       interval: "daily"

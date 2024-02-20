@@ -79,7 +79,7 @@ echo "TEMP_DIR: $TEMP_DIR"
 trap "rm -rf \"${TEMP_DIR}\"" EXIT
 
 pom_xml >"$TEMP_DIR/pom.xml"
-#cat "$TEMP_DIR/pom.xml"
+cat "$TEMP_DIR/pom.xml"
 
 readonly VERSIONS_PLUGIN=org.codehaus.mojo:versions-maven-plugin:2.16.2
-mvn -f "$TEMP_DIR/pom.xml" "$VERSIONS_PLUGIN":display-dependency-updates \
+mvn -f "$TEMP_DIR/pom.xml" "$VERSIONS_PLUGIN":display-dependency-updates

@@ -1,85 +1,40 @@
 #!/bin/bash
 
-# Display any updates that are available for the dependencies of a JBang alias
+# Display available updates for JBang aliases
 
-if [[ $# != 2 ]]; then
-  echo "usage: display_dependency_updates <alias_name> <catalog_file>"
-  exit 1
-fi
-
-if ! type -P jq >/dev/null; then
-  echo "error: couldn't find jq on path."
-  exit 1
-fi
-
-alias_name=$1
-
-#readonly CATALOG_FILE=~/.jbang/jbang-catalog.json
-readonly CATALOG_FILE=$2
-# TODO: Determine the CATALOG_FILE automatically uses the same heuristics as jbang
-# Possibly parse the output of `jbang alias list --show-origin`
-
-alias_metadata=$(jq ".aliases.$alias_name" "$CATALOG_FILE")
-if [[ $alias_metadata = "null" ]]; then
-  echo "error: Couldn't fine alias name $alias_name in $CATALOG_FILE"
-  exit 1
-fi
-
-readarray -t DEPS < <(jq -r ".aliases.$alias_name.dependencies | .[]" "$CATALOG_FILE")
-
-# The script-ref maybe be a file path to a script
-# or the coordinates of a maven artifact in group:artifact:version format (GAV string)
-gav_maybe=$(jq -r ".aliases.$alias_name.\"script-ref\"" "$CATALOG_FILE")
-if [[ $gav_maybe = *:*:* ]]; then
-  # The script-ref is maven coordinates
-  DEPS+=($gav_maybe)
-fi
-
-dependency_xml() {
-  local gav=$1 # Maven coordinates of the dependency
-  local group_id artifact_id version packaging classifier
-  IFS=':' read -r group_id artifact_id version packaging classifier <<<$gav
-  if [[ ! $group_id ]]; then
-    die "dependency '$coord' has no groupId"
-  fi
-  if [[ ! $artifact_id ]]; then
-    die "dependency '$coord' has no artifactId"
-  fi
-  if [[ ! $version ]]; then
-    die "dependency '$coord' has no version"
-  fi
-  echo "<dependency>"
-  echo "<groupId>$group_id</groupId>"
-  echo "<artifactId>$artifact_id</artifactId>"
-  echo "<version>$version</version>"
-  if [[ $classifier ]]; then
-    echo "<classifier>$classifier</classifier>"
-  fi
-  echo "</dependency>"
-}
-
-pom_xml() {
-  # Minimal pom
-  # https://maven.apache.org/guides/introduction/introduction-to-the-pom.html#Minimal_POM
-  echo "<project>"
-  echo "<modelVersion>4.0.0</modelVersion>"
-  echo "<groupId>com.example</groupId>"
-  echo "<artifactId>my-app</artifactId>"
-  echo "<version>1</version>"
-  echo "<dependencies>"
-  for d in "${DEPS[@]}"; do
-    dependency_xml "$d"
-  done
-  echo "</dependencies>"
-  echo "</project>"
-}
-
-TEMP_DIR=$(mktemp -d); readonly TEMP_DIR
-echo "TEMP_DIR: $TEMP_DIR"
-trap "rm -rf \"${TEMP_DIR}\"" EXIT
-
-pom_xml >"$TEMP_DIR/pom.xml"
-cat "$TEMP_DIR/pom.xml"
+set -eu -o pipefail
+shopt -s extglob
 
 readonly VERSIONS_PLUGIN=org.codehaus.mojo:versions-maven-plugin:2.16.2
-mvn -f "$TEMP_DIR/pom.xml" "$VERSIONS_PLUGIN":display-dependency-updates
+readonly BOLD='\033[1m'
+readonly YELLOW='\033[33m'
+readonly NOCOLOR='\033[0m'
+
+display_dependency_updates_for_one_pom() {
+  pom_file=$1
+
+  # Extract the alias name from the pom file path
+  : "${pom_file/#pom_files\/}" # trim leading 'pom_files/`
+  alias_name="${_/%\/pom.xml/}"  # trim trailing '/pom.xml
+
+  echo -e "- $BOLD$YELLOW$alias_name$NOCOLOR:"
+  updates=$(
+    mvn -f "$pom_file" "$VERSIONS_PLUGIN":display-dependency-updates \
+      | awk '/The following dependencies/{flag=1; next}
+             /^\[INFO\] *?$/{flag=0}
+             $1=""
+             flag {print "", $0}'
+  )
+  echo "${updates:-  (No dependency updates available)}"
+}
+
+echo "Available updates:"
+pom_files=(pom_files/*/pom.xml)
+if [[ ${#pom_files[@]} -eq 0 ]]; then
+  echo "No pom files found. Did you run `generate_pom_files`?"
+else
+  for pom_file in "${pom_files[@]}"; do
+    display_dependency_updates_for_one_pom "$pom_file"
+  done
+fi
+

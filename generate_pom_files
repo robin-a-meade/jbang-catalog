@@ -1,0 +1,237 @@
+#!/usr/bin/env bash
+
+# This script generates a pom.xml file for each JBang alias in the catalog.
+#
+# Each generated pom file is a minimal pom that simply declares the same
+# dependencies as the corresponding JBang alias
+#
+# Each generated pom file will be placed at `pom_files/<ALIAS_NAME>/pom.xml`.
+#
+# These generated pom files serve two purposes:
+# * They let us run `mvn versions:display-dependency-updates` to see a list
+#   of available dependency updates. See companion script
+#   `display_dependency_updates` for this.
+# * Integration with GitHub's Dependabot. If the -r option is present, this
+#   script registers the generated pom.xml files with GitHub's dependabot by
+#   generating a `.github/dependabot.yml` file.
+#
+# NOTE: There may be better ways to check for updates to JBang alias
+# dependencies.  See related discussion:
+# https://github.com/orgs/jbangdev/discussions/1751
+
+set -eu -o pipefail
+shopt -s extglob
+
+# cd into directory containing the script
+# This is symlink safe. https://stackoverflow.com/a/51651602
+cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
+
+# Prerequisites
+if ! type -P jq >/dev/null; then
+  die "error: couldn't find jq on path."
+  exit 1
+fi
+
+readonly CATALOG_FILE=./jbang-catalog.json
+
+# Check for latest version of the versions-maven-plugin
+# https://mvnrepository.com/artifact/org.codehaus.mojo/versions-maven-plugin
+# TODO: Would 'RELEASE' work? If so, would it work offline?
+readonly VERSIONS_PLUGIN=org.codehaus.mojo:versions-maven-plugin:2.16.2
+
+# Initialize default values of options
+REGISTER_WITH_DEPENDABOT=N
+VERBOSE=N
+
+die() { echo "error: $@"; exit 1; }
+debug() { if [[ $VERBOSE = Y ]]; then echo "$@"; fi; }
+
+# Get the name of the script
+PROGNAME=$(basename "$0"); readonly PROGNAME
+
+# USAGE string. This is used by both the print_usage and print_help commands.
+readonly USAGE="$PROGNAME [-h] [-r] [-v]"
+
+print_usage () {
+    echo "$PROGNAME: usage: $USAGE"
+}
+
+print_help () {
+  cat <<EOF
+
+    $USAGE
+
+    Generate pom files for aliases defined in the JBang catalog
+
+    Options:
+      -h           print this help message
+      -r           register the generated pom files in .github/dependabot.yml
+      -v           verbose
+
+EOF
+}
+
+# Process options using the getopts bash builtin
+# This loop calls getopts until there are no more options on the command line
+# After each call to getopts, the option name will be stored in `opt` and any
+# argument to it will be stored in `OPTARG`.
+# A colon after an option means it expects an argument.
+# A leading colon means to suppress the error reporting, which you'd want to do
+# if you are handling errors yourself.
+# NOTE: getopts understands the posix convention that '--' marks the end of options.
+# https://wiki.bash-hackers.org/howto/getopts_tutorial
+# Alt: https://web.archive.org/web/20211006154957/https://wiki.bash-hackers.org/howto/getopts_tutorial
+while getopts ':hrv' opt; do
+  case $opt in
+    h)
+      print_help
+      exit
+      ;;
+    r)
+      REGISTER_WITH_DEPENDABOT=Y
+      ;;
+    v)
+      VERBOSE=Y
+      ;;
+    \?)
+      echo "$PROGNAME: -$OPTARG: invalid option"
+      print_usage
+      exit 1
+      ;;
+    :)
+      echo "$PROGNAME: -$OPTARG: option requires an argument"
+      print_usage
+      exit 1
+      ;;
+    *)
+      echo "Default case. This should never be triggered"
+      print_usage
+      exit 1
+      ;;
+  esac
+done
+
+shift $((OPTIND - 1))
+
+# Now that option variables are set, we can make them readonly
+readonly REGISTER_WITH_DEPENDABOT
+readonly VERBOSE
+
+dependency_xml() {
+
+  local gav=$1 # Maven coordinates of the dependency (GAV string)
+  local group_id artifact_id version packaging classifier
+  IFS=':' read -r group_id artifact_id version packaging classifier <<<$gav
+  if [[ ! $group_id ]]; then
+    die "dependency '$gav' has no groupId"
+  fi
+  if [[ ! $artifact_id ]]; then
+    die "dependency '$gav' has no artifactId"
+  fi
+  if [[ ! $version ]]; then
+    die "dependency '$gav' has no version"
+  fi
+  echo "<dependency>"
+  echo "<groupId>$group_id</groupId>"
+  echo "<artifactId>$artifact_id</artifactId>"
+  echo "<version>$version</version>"
+  if [[ $classifier ]]; then
+    echo "<classifier>$classifier</classifier>"
+  fi
+  echo "</dependency>"
+}
+
+pom_xml() {
+  # Minimal pom
+  # https://maven.apache.org/guides/introduction/introduction-to-the-pom.html#Minimal_POM
+  echo "<project>"
+  echo "<modelVersion>4.0.0</modelVersion>"
+  echo "<groupId>com.example</groupId>"
+  echo "<artifactId>my-app</artifactId>"
+  echo "<version>1</version>"
+  echo "<dependencies>"
+  for d in "${DEPS[@]}"; do
+    dependency_xml "$d"
+  done
+  echo "</dependencies>"
+  echo "</project>"
+}
+
+process_one_alias() {
+  alias_name=$1
+  debug "- $alias_name"
+
+  alias_metadata=$(jq ".aliases.$alias_name" "$CATALOG_FILE")
+  if [[ $alias_metadata = "null" ]]; then
+    echo "error: Couldn't fine alias name $alias_name in $CATALOG_FILE"
+    exit 1
+  fi
+
+  readarray -t DEPS < <(jq -r ".aliases.$alias_name.dependencies | .[]" "$CATALOG_FILE" 2>/dev/null)
+
+  # The script-ref maybe be a file path to a script
+  # or the coordinates of a maven artifact in group:artifact:version form (GAV string)
+  gav_maybe=$(jq -r ".aliases.$alias_name.\"script-ref\"" "$CATALOG_FILE")
+  debug "  script-ref: $gav_maybe"
+  if [[ $gav_maybe = *:*:* ]]; then
+    # The script-ref _is_ a GAV string
+    DEPS+=("$gav_maybe")
+  fi
+
+  if [[ $VERBOSE = Y ]]; then
+    if [[ ${#DEPS[@]} -eq 0 ]]; then
+      echo "  0 dependencies. Skipping."
+    else
+      echo "  ${#DEPS[@]} dependencies:"
+      local dependency
+      for dependency in ${DEPS[@]}; do
+        echo "  - $dependency"
+      done
+    fi
+  fi
+  if [[ ${#DEPS[@]} -eq 0 ]]; then
+    return
+  fi
+  if ! mkdir -p "pom_files/$alias_name"; then
+    die "couldn't create directory pom_files/$alias_name"
+  fi
+  pom_xml >"pom_files/$alias_name/pom.xml"
+}
+
+if ! [[ -r $CATALOG_FILE ]]; then
+  die "could not read $CATALOG_FILE"
+fi
+
+if ! readarray -t alias_names < <(jq -r '.aliases | keys | .[]' "$CATALOG_FILE"); then
+  die "an error occurred while parsing $CATALOG_FILE looking for alias definitions"
+fi
+
+if [[ -d pom_files ]]; then
+  debug "Removing previously generated pom files"
+  if ! rm -r pom_files; then
+    die "an error occurred while removing previously generated pom_files"
+  fi
+fi
+
+if [[ ${#alias_names[@]} -eq 0 ]]; then
+  die "Found no alias definitions in $CATALOG_FILE"
+fi
+
+if [[ $VERBOSE = Y ]]; then
+  echo "Found ${#alias_names[@]} aliases in $CATALOG_FILE:"
+fi
+
+for alias_name in "${alias_names[@]}"; do
+  process_one_alias "$alias_name"
+done
+
+pom_files=(pom_files/*/pom.xml)
+if [[ ${#pom_files[@]} -eq 0 ]]; then
+  echo "Generated 0 pom files"
+else
+  echo "Generated ${#pom_files[@]} pom files:"
+  for pom_file in "${pom_files[@]}"; do
+    echo "- $pom_file"
+  done
+fi
+

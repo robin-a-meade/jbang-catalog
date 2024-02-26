@@ -1,0 +1,5 @@
+  - package-ecosystem: "maven"
+    directory: "/pom_files/${alias_name}"
+    schedule:
+      interval: "weekly"
+

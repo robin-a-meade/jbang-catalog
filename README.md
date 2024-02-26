@@ -4,11 +4,12 @@
 
 ### Implement the `-r` option to the `generate_pom_files` bash script
 
-This option will register the generated pom files into `.github/dependabot.yml`
+This option will register the generated pom files into `.github/dependabot.yml`.
 
-I created template file to use: `dependabot_stanza_template.yml`.
+I created a template file to use: `dependabot_stanza_template.yml`.
 
-This process will apply the template file as it iterates over the list of genereated pom files, resulting in an appropriate `.github/dependabot.yml` file.
+This option involves iteratating over the list of generated pom files, applying the stanza template,
+to build an appropriate `.github/dependabot.yml` file.
 
 ### Handle `//DEPS` dependency declarations
 
@@ -26,7 +27,7 @@ The long term solution would be to have functionality for this built into jbang.
 
 Actually, the `jbang export` command might fit the bill. In my testing,
 however, the pom it generates includes _transitive_ dependencies. It should only
-include _top-level_ declared dependencies.
+include _declared_ dependencies.
 
 For example, I tried this:
 
@@ -48,26 +49,26 @@ but these are _transitive_ dependencies of `net.sf.saxon:Saxon-HE`.
 
 Prints its command line arguments. Useful for testing.
 
-We added the alias to the catalog using:
+This alias was added to the catalog using:
 
-```
+```bash
 jbang alias add ./scripts/jargs.java
 ```
 
 Example execution of the alias:
 
 ```console
-[user@laptop ~] jbang run jargs@robin-a-meade one two three
+[user@laptop ~]$ jbang run jargs@robin-a-meade one two three
 3 args: <one> <two> <three>
 ```
 
 It can be installed as an app:
 
 ```console
-[user@laptop ~] jbang app install jargs@robin-a-meade
-[user@laptop ~] type -a jargs
+[user@laptop ~]$ jbang app install jargs@robin-a-meade
+[user@laptop ~]$ type -a jargs
 jargs is /home/user/.jbang/bin/jargs
-[user@laptop ~] jargs one two three
+[user@laptop ~]$ jargs one two three
 3 args: <one> <two> <three>
 ```
 
@@ -75,7 +76,7 @@ jargs is /home/user/.jbang/bin/jargs
 
 This is an alias for [`sqlline`](https://github.com/julianhyde/sqlline).
 
-We added the alias to the catalog using:
+This alias was added to the catalog using:
 
 ```
 jbang alias add \
@@ -91,7 +92,7 @@ dependencies.
 
 ### saxonhe
 
-We added the alias to the catalog using:
+This alias was added to the catalog using:
 
 ```
 jbang alias add ./scripts/saxonhe.java

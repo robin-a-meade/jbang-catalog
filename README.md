@@ -4,7 +4,7 @@
 
 ### Implement the `-r` option to the `generate_pom_files` bash script
 
-This option should register the genereated pom files in `.github/dependabot.yml`
+This option will register the generated pom files into `.github/dependabot.yml`
 
 I created template file to use: `dependabot_stanza_template.yml`.
 
@@ -15,23 +15,23 @@ This process will apply the template file as it iterates over the list of genere
 I initially thought that the alias metadata in `jbang-catalog.json` included
 any dependencies declared in `//DEPS` comments in script files, but it turns
 out that this metadata includes only "extra" dependencies (given as arguments
-to `--deps` options to the `jbang alias add` command.
+to `--deps` options to the `jbang alias add` command).
 
-So, I'll need to way to determine dependencies from `//DEPS` comments.
+So, I'll need a way to determine dependencies from `//DEPS` comments.
 
 Short term, I'll use `awk`, `sed`, or `grep` to extract the `//DEPS` comments
 from script files.
 
-The long term solution would be to have functionality for this need built into jbang.
+The long term solution would be to have functionality for this built into jbang.
 
 Actually, the `jbang export` command might fit the bill. In my testing,
-however, the pom it generates included transitive dependencies. It should only
-include top-level dependencies.
+however, the pom it generates includes _transitive_ dependencies. It should only
+include _top-level_ declared dependencies.
 
 For example, I tried this:
 
 ```
-readonly TEMP_DIR=$(mktemp -d)
+TEMP_DIR=$(mktemp -d)
 jbang export mavenrepo --group=com.example -O "$TEMP_DIR" scripts/saxonhe.java
 ```
 

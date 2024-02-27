@@ -65,4 +65,31 @@ Then, I believe I need to install the Mend Renovate app into my repo.
 
 I then see the Renovate app listed at among my repo's "integrations" at **Settings > GitHub Apps**.
 
-Click the **Configure** button.
+Click the **Configure** button. Can activate for all repos or just specified repos. I activated it for just my `jbang-catalog` repo.
+
+It works! Pull requests started appearing.
+
+A _Dependency Dashboard_ issue was created that allows for interaction with the Renovate bot.
+
+### Additional notes:
+
+I think
+
+```
+"fileMatch": "\\.java",
+```
+
+could be replaced with:
+
+```
+"fileMatch": [".+\\.java$", ".+\\.jsh$"],
+```
+
+or
+
+```
+"fileMatch": ".+\\.(java|jsh)$",
+```
+
+Documentation on regexManagers:  
+https://docs.renovatebot.com/presets-regexManagers/

@@ -2,7 +2,7 @@
   "catalogs": {},
   "aliases": {
     "sqlline_test": {
-      "script-ref": "sqlline:sqlline:1.11.0",
+      "script-ref": "sqlline:sqlline:1.12.0",
       "dependencies": [
         "com.oracle.database.jdbc:ojdbc8:23.2.0.0",
         "com.h2database:h2:2.1.214",

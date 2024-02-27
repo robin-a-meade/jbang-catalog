@@ -13,7 +13,8 @@ Mentioned in above discussion:
 
 > Run `jbang init -t jbangcatalog@jbanghub mycatalog` and you'll get a project with a `renovate.json` that will find updates in //Deps and catalog script refs.
 
-Try it. I get an error:
+Try it...  
+I get an error:
 
 ```console
 [user@laptop]$ jbang init -t jbangcatalog@jbanghub mycatalog
@@ -31,10 +32,11 @@ Explore:
 - (See: https://docs.renovatebot.com/config-presets/)
 - Aha! There is a `jbanghub` template defined in:
   https://github.com/jbanghub/jbang-catalog/blob/main/jbang-catalog.json
-- So, probabably, I need to `s/jbangcatalog@/jbanghub@':  
-`jbang init -t jbanghub@jbanghub mycatalog`
+- So, probabably, I need to `s/jbangcatalog@/jbanghub@/`:  
+  `jbang init -t jbanghub@jbanghub mycatalog`
 
-Try it.
+Try it...  
+Got further:
 
 ```console
 [user@laptop]$ jbang init -t jbanghub@jbanghub mycatalog
@@ -56,7 +58,7 @@ mkdir -p ~/src/jbang-catalog/.github/
 cp mycatalog/.github/renovate.json ~/src/jbang-catalog/.github/
 ```
 
-Then, I believe I need to install the Mend Renovate app into my repo.
+Then, I believe I need to install the Renovate app into my repo.
 
 1. https://github.com/apps/renovate
 2. Click the **Install** button
@@ -67,9 +69,7 @@ I then see the Renovate app listed at among my repo's "integrations" at **Settin
 
 Click the **Configure** button. Can activate for all repos or just specified repos. I activated it for just my `jbang-catalog` repo.
 
-It works! Pull requests started appearing.
-
-A _Dependency Dashboard_ issue was created that allows for interaction with the Renovate bot.
+It works! Pull requests started appearing. And a _Dependency Dashboard_ issue was created that allows for interaction with the Renovate bot.
 
 ### Additional notes:
 

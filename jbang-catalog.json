@@ -17,7 +17,6 @@
     "saxonhe": {
       "script-ref": "scripts/saxonhe.java",
       "dependencies": [
-        "com.h2database:h2:2.1.214"
       ],
       "java-agents": []
     }

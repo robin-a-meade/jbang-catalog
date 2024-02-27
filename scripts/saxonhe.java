@@ -3,7 +3,7 @@
 
 // We're sticking with the 11.x line for now because the Gizmo utility in 
 // the 12.x line requires Saxon-PE (due to pulling in XQuery 4.0).
-//DEPS net.sf.saxon:Saxon-HE:11.6
+//DEPS net.sf.saxon:Saxon-HE:11.5
 
 // Other dependencies
 //DEPS jline:jline:2.14.6

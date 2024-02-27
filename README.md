@@ -55,3 +55,14 @@ I believe I just need the `.github/renovate.json` file. I copy it into my existi
 mkdir -p ~/src/jbang-catalog/.github/
 cp mycatalog/.github/renovate.json ~/src/jbang-catalog/.github/
 ```
+
+Then, I believe I need to install the Mend Renovate app into my repo.
+
+1. https://github.com/apps/renovate
+2. Click the **Install** button
+3. Authorize the App to access your repo
+4. Accept terms of the service
+
+I then see the Renovate app listed at among my repo's "integrations" at **Settings > GitHub Apps**.
+
+Click the **Configure** button.

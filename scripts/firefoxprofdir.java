@@ -7,10 +7,11 @@
  * ============
  * It launches an instance of firefox and searches its "about:profiles" page.
  *
- * Why not just figure it out by accessing `~/.mozilla/profiles.ini`? Because
- * interpretting this file has become increasingly complex. It may now be
- * necessary to also access `~/.mozilla/installs.ini`. I couldn't find a clear
- * explanation. I decided it was better to query firefox itself for this.
+ * Q. Why not just figure it out by accessing `~/.mozilla/firefox/profiles.ini`?
+ * A. Because interpretting that file has become increasingly complex. It's now
+ * necessary to also consider `~/.mozilla/firefox/installs.ini`. I couldn't
+ * find an authoritative explanation. I decided it is best to query firefox
+ * itself for this.
  *
  * Caching
  * =======
@@ -31,19 +32,33 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 
-public class FirefoxProfileDirectory {
-    public static void main(String[] args) {
-        FirefoxOptions options = new FirefoxOptions();
-        options.addArguments("-headless");
-        WebDriver driver = new FirefoxDriver(options);
-        try {
-            driver.get("about:profiles");
-            WebElement elem = driver.findElement(By.cssSelector("tr:has(td[data-l10n-id='profiles-yes']) + tr > td"));
-            JavascriptExecutor js = (JavascriptExecutor) driver;
-            String profileName = (String) js.executeScript("return arguments[0].childNodes[0].textContent;", elem);
-            System.out.println(profileName);
-        } finally {
-            driver.quit();
-        }
+public class firefoxprofdir {
+
+  static String queryFirefoxForProfileDir() {
+    FirefoxOptions options = new FirefoxOptions();
+    options.addArguments("-headless");
+    WebDriver driver = new FirefoxDriver(options);
+    try {
+      driver.get("about:profiles");
+      WebElement elem = driver.findElement(By.cssSelector("tr:has(td[data-l10n-id='profiles-yes']) + tr > td"));
+      JavascriptExecutor js = (JavascriptExecutor) driver;
+      String profileName = (String) js.executeScript("return arguments[0].childNodes[0].textContent;", elem);
+      return profileName;
+    } finally {
+      System.out.println("finally");
+      driver.quit();
     }
+  }
+
+  public static void main(String[] args) {
+    String hashKey = calculateHashKey();
+    if ((String cachedAnswer = lookupInCache(hashKey)) != null ) {
+      System.err.println("Cache hit: true. Returning cached value");
+      return cachedAnswer;
+    }
+    System.err.println("Cache hit: false");
+    String answer = queryFirefoxForProfileDir();
+    storeInCache(hashKey, answer);
+    System.out.println(answer);
+  }
 }

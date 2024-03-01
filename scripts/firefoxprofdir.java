@@ -31,8 +31,26 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import static java.lang.System.out;
+
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+import static java.lang.System.err;
 
 public class firefoxprofdir {
+
+  static boolean fresh = false;
+  static boolean verbose = false;
+
+  static void log(String s) {
+    if (verbose) {
+      err.println(s);
+    }
+  }
 
   static String queryFirefoxForProfileDir() {
     FirefoxOptions options = new FirefoxOptions();
@@ -51,14 +69,69 @@ public class firefoxprofdir {
   }
 
   public static void main(String[] args) {
-    String hashKey = calculateHashKey();
-    if ((String cachedAnswer = lookupInCache(hashKey)) != null ) {
-      System.err.println("Cache hit: true. Returning cached value");
-      return cachedAnswer;
+    String usage = "usage: firefoxprofdir [-v] [--fresh]";
+    log("main");
+
+    for (String arg : args) {
+      switch (arg) {
+        case "--fresh":
+          fresh = true;
+          break;
+        case "-v":
+          verbose = true;
+          break;
+        default:
+          err.println("Invalid option: " + arg);
+          err.println(usage);
+      }
     }
-    System.err.println("Cache hit: false");
-    String answer = queryFirefoxForProfileDir();
-    storeInCache(hashKey, answer);
-    System.out.println(answer);
+
+    String hashKey = calculateHashKey();
+    log("hashKey: " + hashKey);
+    log("pta");
+    // if ((String cachedAnswer = lookupInCache(hashKey)) != null ) {
+    // System.err.println("Cache hit: true. Returning cached value");
+    // return cachedAnswer;
+    // }
+    // System.err.println("Cache hit: false");
+    // String answer = queryFirefoxForProfileDir();
+    // storeInCache(hashKey, answer);
+    // System.out.println(answer);
   }
+
+  static String calculateHashKey() {
+    return "stub";
+    // return calculateSha256(});
+  }
+
+  private static String bytesToHex(byte[] hash) {
+    StringBuilder hexString = new StringBuilder(2 * hash.length);
+    for (byte b : hash) {
+      String hex = Integer.toHexString(0xff & b);
+      if (hex.length() == 1) {
+        hexString.append('0');
+      }
+      hexString.append(hex);
+    }
+    return hexString.toString();
+  }
+
+  private static String calculateSha256(String[] filePaths) throws IOException, NoSuchAlgorithmException {
+    MessageDigest digest = MessageDigest.getInstance("SHA-256");
+
+    for (String filePath : filePaths) {
+      try (FileInputStream fis = new FileInputStream(filePath);
+          BufferedInputStream bis = new BufferedInputStream(fis)) {
+        byte[] buffer = new byte[8192];
+        int bytesRead;
+        while ((bytesRead = bis.read(buffer)) != -1) {
+          digest.update(buffer, 0, bytesRead);
+        }
+      }
+    }
+
+    byte[] hash = digest.digest();
+    return bytesToHex(hash);
+  }
+
 }

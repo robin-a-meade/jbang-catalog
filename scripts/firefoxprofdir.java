@@ -3,26 +3,27 @@
 /**
  * This script determines the location of your firefox profile directory.
  *
- * How it works
- * ============
- * It launches an instance of firefox and searches its "about:profiles" page.
+ * <h2>How it works</h2>
+ * <p>It launches an instance of firefox and searches its "about:profiles" page.</p>
  *
- * Q. Why not just figure it out by accessing `~/.mozilla/firefox/profiles.ini`?
- * A. Because interpretting that file has become increasingly complex. It's now
+ * <p>Q. Why not just extract it from `~/.mozilla/firefox/profiles.ini`?</p>
+ * <p>A. Because interpretting that file has become increasingly complex. It's now
  * necessary to also consider `~/.mozilla/firefox/installs.ini`. I couldn't
- * find an authoritative explanation. I decided it is best to query firefox
- * itself for this.
+ * find an cleaer explanation. I therefore decided it is best to query firefox
+ * itself for this.</p>
  *
- * Caching
- * =======
- * The answer will be cached, because launching firefox is an expensive operation.
+ * <h2>Caching</h2>
  *
- * The answer will be cached at:
+ * <p>The answer will be cached, because launching firefox is an expensive operation.</p>
  *
+ * <p>The answer will be cached at:</p>
+ * 
+ * <pre>{@code
  *    <user cache dir>/firefoxprofdir/<hashcode>/location.txt
- *
- * where <user cache dir> is ${XDG_CACHE_HOME:-~/.cache}
- * and <hashcode> is the sha256 hash of `cat ~/.mozilla/{profiles,installs}.ini`
+ * }</pre>
+ * 
+ * <p>where <user cache dir> is ${XDG_CACHE_HOME:-~/.cache}
+ * and <hashcode> is the sha256 hash of `cat ~/.mozilla/{profiles,installs}.ini`</p>
  *
  */
 import org.openqa.selenium.WebDriver;
@@ -31,15 +32,15 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import static java.lang.System.out;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
-import static java.lang.System.err;
 
 public class firefoxprofdir {
 
@@ -48,9 +49,13 @@ public class firefoxprofdir {
 
   static void log(String s) {
     if (verbose) {
-      err.println(s);
+      System.err.println(s);
     }
   }
+
+  /////////////////////////////////////////////////////////////
+  // main logic
+  /////////////////////////////////////////////////////////////
 
   static String queryFirefoxForProfileDir() {
     FirefoxOptions options = new FirefoxOptions();
@@ -68,6 +73,29 @@ public class firefoxprofdir {
     }
   }
 
+  /**
+   * Produces same as:
+   * cat ~/.mozilla/firefox/{profiles,installs}.ini | sha256sum
+   */
+  static String calculateHashKey() {
+    String homeDir = System.getProperty("user.home");
+    String[] filePaths = {
+        homeDir + "/.mozilla/firefox/profiles.ini",
+        homeDir + "/.mozilla/firefox/installs.ini"
+    };
+    try {
+      return calculateSha256(filePaths);
+    } catch (NoSuchAlgorithmException e) {
+      throw new RuntimeException("Error finding SHA-256 algorithm", e);
+    } catch (IOException e) {
+      throw new RuntimeException("Error reading Firefox configuration files", e);
+    }
+  }
+
+  static String lookupInCache(String hash) {
+    return "answerFromCache";
+  }
+
   public static void main(String[] args) {
     String usage = "usage: firefoxprofdir [-v] [--fresh]";
     log("main");
@@ -81,30 +109,31 @@ public class firefoxprofdir {
           verbose = true;
           break;
         default:
-          err.println("Invalid option: " + arg);
-          err.println(usage);
+          System.err.println("Invalid option: " + arg);
+          System.err.println(usage);
+          System.exit(1);
       }
     }
 
     String hashKey = calculateHashKey();
     log("hashKey: " + hashKey);
-    log("pta");
-    // if ((String cachedAnswer = lookupInCache(hashKey)) != null ) {
-    // System.err.println("Cache hit: true. Returning cached value");
-    // return cachedAnswer;
-    // }
+    String cachedAnswer;
+    if ((cachedAnswer = lookupInCache(hashKey)) != null) {
+      log("Cache hit occurred. Returning cached value");
+      System.out.println(cachedAnswer);
+      return;
+    }
     // System.err.println("Cache hit: false");
     // String answer = queryFirefoxForProfileDir();
     // storeInCache(hashKey, answer);
-    // System.out.println(answer);
+    System.out.println("answer");
   }
 
-  static String calculateHashKey() {
-    return "stub";
-    // return calculateSha256(});
-  }
+  /////////////////////////////////////////////////////////////
+  // General utility functions
+  /////////////////////////////////////////////////////////////
 
-  private static String bytesToHex(byte[] hash) {
+  static String bytesToHex(byte[] hash) {
     StringBuilder hexString = new StringBuilder(2 * hash.length);
     for (byte b : hash) {
       String hex = Integer.toHexString(0xff & b);
@@ -116,7 +145,7 @@ public class firefoxprofdir {
     return hexString.toString();
   }
 
-  private static String calculateSha256(String[] filePaths) throws IOException, NoSuchAlgorithmException {
+  static String calculateSha256(String[] filePaths) throws IOException, NoSuchAlgorithmException {
     MessageDigest digest = MessageDigest.getInstance("SHA-256");
 
     for (String filePath : filePaths) {

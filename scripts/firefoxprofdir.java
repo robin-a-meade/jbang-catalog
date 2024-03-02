@@ -26,21 +26,20 @@
  * and <hashcode> is the sha256 hash of `cat ~/.mozilla/{profiles,installs}.ini`</p>
  *
  */
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 
 public class firefoxprofdir {
 
@@ -74,7 +73,7 @@ public class firefoxprofdir {
   }
 
   /**
-   * Produces same as:
+   * Produces same sha-256 hash value as doing:
    * cat ~/.mozilla/firefox/{profiles,installs}.ini | sha256sum
    */
   static String calculateHashKey() {
@@ -90,6 +89,28 @@ public class firefoxprofdir {
     } catch (IOException e) {
       throw new RuntimeException("Error reading Firefox configuration files", e);
     }
+  }
+
+  /**
+   * Returns path to the user's cache home.
+   * 
+   * This will return the value of environment variable XDG_CACHE_HOME
+   * with fallback to `$HOME/.cache`.
+   */
+  Path pathToCacheHome() {
+    // Check for XDG_CACHE_HOME environment variable
+    String xdgCacheHome = System.getenv("XDG_CACHE_HOME");
+    if (xdgCacheHome != null) {
+      return Paths.get(xdgCacheHome);
+    }
+
+    // Fallback to default location on most systems
+    String userHome = System.getProperty("user.home");
+    return Paths.get(userHome, ".cache");
+  }
+
+  static String pathToCachedFile() {
+
   }
 
   static String lookupInCache(String hash) {

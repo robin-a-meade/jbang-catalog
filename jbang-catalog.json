@@ -16,8 +16,11 @@
     },
     "saxonhe": {
       "script-ref": "scripts/saxonhe.java",
-      "dependencies": [
-      ],
+      "dependencies": [],
+      "java-agents": []
+    },
+    "firefox-profile-dir": {
+      "script-ref": "scripts/FirefoxProfileDir.java",
       "java-agents": []
     }
   },

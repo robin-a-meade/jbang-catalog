@@ -19,18 +19,26 @@
  * <p>The answer will be cached at:</p>
  * 
  * <pre>{@code
- *    <user cache dir>/firefoxprofdir/<hashcode>/location.txt
+ *    <user cache dir>/firefoxprofdir/<hashcode>.ans
  * }</pre>
  * 
- * <p>where <user cache dir> is ${XDG_CACHE_HOME:-~/.cache}
+ * <p>where <user cache dir> is ${XDG_CACHE_HOME} with fall back to ~/.cache
  * and <hashcode> is the sha256 hash of `cat ~/.mozilla/{profiles,installs}.ini`</p>
  *
+ * <h2>Status</h2>
+ * <p>I'm not happy with how many lines of code needed to be added to implement caching.</p>
+ * <p>I suspect that all the caching logic can be moved to a general helper class.</p>
+ * <p>TODO: Move caching logic to a general helper class.</p>
  */
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -41,8 +49,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 
-public class firefoxprofdir {
+public class FirefoxProfileDirWithCaching {
 
+  static final String installedAppName = "firefox-profile-dir";
   static boolean fresh = false;
   static boolean verbose = false;
 
@@ -52,11 +61,11 @@ public class firefoxprofdir {
     }
   }
 
-  /////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////
   // main logic
-  /////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////
 
-  static String queryFirefoxForProfileDir() {
+  static String driveFirefox() {
     FirefoxOptions options = new FirefoxOptions();
     options.addArguments("-headless");
     WebDriver driver = new FirefoxDriver(options);
@@ -67,7 +76,6 @@ public class firefoxprofdir {
       String profileName = (String) js.executeScript("return arguments[0].childNodes[0].textContent;", elem);
       return profileName;
     } finally {
-      System.out.println("finally");
       driver.quit();
     }
   }
@@ -76,7 +84,7 @@ public class firefoxprofdir {
    * Produces same sha-256 hash value as doing:
    * cat ~/.mozilla/firefox/{profiles,installs}.ini | sha256sum
    */
-  static String calculateHashKey() {
+  static String calculateHash() {
     String homeDir = System.getProperty("user.home");
     String[] filePaths = {
         homeDir + "/.mozilla/firefox/profiles.ini",
@@ -91,34 +99,37 @@ public class firefoxprofdir {
     }
   }
 
-  /**
-   * Returns path to the user's cache home.
-   * 
-   * This will return the value of environment variable XDG_CACHE_HOME
-   * with fallback to `$HOME/.cache`.
-   */
-  Path pathToCacheHome() {
-    // Check for XDG_CACHE_HOME environment variable
-    String xdgCacheHome = System.getenv("XDG_CACHE_HOME");
-    if (xdgCacheHome != null) {
-      return Paths.get(xdgCacheHome);
+  static Path pathToCacheDirOfApp() {
+    return cacheHome().resolve(installedAppName);
+  }
+
+  static Path pathToCachedAnswerFile(String hash) {
+    return pathToCacheDirOfApp().resolve(hash + ".ans");
+  }
+
+  static String lookUpAnswerInCache(String hash) {
+    return null;
+  }
+
+  static void removePreviouslyCachedAnswerFiles() {
+    if (Files.exists(pathToCacheDirOfApp())) {
+      try (DirectoryStream<Path> stream = Files.newDirectoryStream(pathToCacheDirOfApp(), "*.ans")) {
+        stream.forEach(file -> {
+          try {
+            Files.delete(file);
+            log("Deleted: " + file.toString());
+          } catch (IOException e) {
+            log("Error deleting " + file.toString() + ": " + e.getMessage());
+          }
+        });
+      } catch (IOException e) {
+        log("Error accessing directory: " + e.getMessage());
+      }
     }
-
-    // Fallback to default location on most systems
-    String userHome = System.getProperty("user.home");
-    return Paths.get(userHome, ".cache");
-  }
-
-  static String pathToCachedFile() {
-
-  }
-
-  static String lookupInCache(String hash) {
-    return "answerFromCache";
   }
 
   public static void main(String[] args) {
-    String usage = "usage: firefoxprofdir [-v] [--fresh]";
+    String usage = "usage: " + installedAppName + " [-v] [--fresh]";
     log("main");
 
     for (String arg : args) {
@@ -136,23 +147,63 @@ public class firefoxprofdir {
       }
     }
 
-    String hashKey = calculateHashKey();
-    log("hashKey: " + hashKey);
+    if (fresh) {
+      removePreviouslyCachedAnswerFiles();
+    }
+    String hash = calculateHash();
+    log("hash: " + hash);
+    Path pathToCachedAnswerFile = pathToCachedAnswerFile(hash);
+    log("pathToCachedAnswerFile: " + pathToCachedAnswerFile);
+
     String cachedAnswer;
-    if ((cachedAnswer = lookupInCache(hashKey)) != null) {
+    try {
+      cachedAnswer = Files.readString(pathToCachedAnswerFile);
       log("Cache hit occurred. Returning cached value");
       System.out.println(cachedAnswer);
       return;
+    } catch (NoSuchFileException e) {
+      log("Wasn't found in cache");
+    } catch (IOException e) {
+      throw new RuntimeException("Error reading file: " + e.getMessage(), e);
     }
-    // System.err.println("Cache hit: false");
-    // String answer = queryFirefoxForProfileDir();
-    // storeInCache(hashKey, answer);
-    System.out.println("answer");
+
+    log("Driving Firefox to get the answer");
+    String answer = driveFirefox();
+    log("Caching the answer");
+    try {
+      // Create any missing parent directories
+      Files.createDirectories(pathToCachedAnswerFile.getParent());
+      removePreviouslyCachedAnswerFiles();
+      Files.writeString(pathToCachedAnswerFile, answer, StandardOpenOption.CREATE);
+    } catch (IOException e) {
+      throw new RuntimeException("Error writing file: " + e.getMessage(), e);
+    }
+    log("Printing the answer to STDOUT");
+    System.out.println(answer);
   }
 
-  /////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////
   // General utility functions
-  /////////////////////////////////////////////////////////////
+  // (These could be moved to a utility class)
+  /////////////////////////////////////////////////////////////////////
+
+  /**
+   * Returns path to the user's cache home.
+   * 
+   * This will return the value of environment variable XDG_CACHE_HOME
+   * or fallback to `$HOME/.cache`.
+   */
+  static Path cacheHome() {
+    // Check for XDG_CACHE_HOME environment variable
+    String xdgCacheHome = System.getenv("XDG_CACHE_HOME");
+    if (xdgCacheHome != null) {
+      return Paths.get(xdgCacheHome);
+    }
+
+    // Fallback to default location on most systems
+    String userHome = System.getProperty("user.home");
+    return Paths.get(userHome, ".cache");
+  }
 
   static String bytesToHex(byte[] hash) {
     StringBuilder hexString = new StringBuilder(2 * hash.length);

@@ -12,10 +12,6 @@
 
 import java.util.Arrays;
 
-import net.sf.saxon.Transform;
-import net.sf.saxon.Query;
-import net.sf.saxon.Gizmo;
-
 public class saxonhe {
 
     static String usage = "saxonhe (transform|query|gizmo) OPTIONS";
@@ -34,17 +30,17 @@ public class saxonhe {
             case "transform":
                 // https://www.saxonica.com/html/documentation12/javadoc/net/sf/saxon/Transform.html
                 // https://www.saxonica.com/documentation12/index.html#!using-xsl/commandline
-                new Transform().doTransform(remainingArgs);
+                net.sf.saxon.Transform.main(remainingArgs);
                 break;
             case "query":
                 // https://www.saxonica.com/html/documentation12/javadoc/net/sf/saxon/Query.html
                 // https://www.saxonica.com/documentation12/index.html#!using-xquery/commandline
-                new Query().doQuery(remainingArgs);
+                net.sf.saxon.Query.main(remainingArgs);
                 break;
             case "gizmo":
                 // https://www.saxonica.com/html/documentation12/javadoc/net/sf/saxon/Gizmo.html
                 // https://www.saxonica.com/documentation12/index.html#!gizmo
-                new Gizmo().main(remainingArgs);
+                net.sf.saxon.Gizmo.main(remainingArgs);
                 break;
             default:
                 System.err.println("Invalid command: " + command);

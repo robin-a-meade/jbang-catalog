@@ -22,6 +22,14 @@
     "firefox-profile-dir": {
       "script-ref": "scripts/FirefoxProfileDir.java",
       "java-agents": []
+    },
+    "multiple-files-demo": {
+      "script-ref": "scripts/multiple-files-demo/Main.java",
+      "java-agents": []
+    },
+    "kebab-case-demo": {
+      "script-ref": "scripts/kebab-case-demo",
+      "java-agents": []
     }
   },
   "templates": {}

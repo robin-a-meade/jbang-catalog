@@ -1,0 +1,8 @@
+#! A shebang line may be added. It will be automatically stripped prior to compiling
+class KebabCaseDemo {
+  static public void main(String[] args) {
+    System.out.println("Hello from KebabCaseDemo!");
+  }
+}
+
+// vim: set ft=java:

@@ -1,8 +1,8 @@
 // This class uses "The Saxon XSLT and XQuery Processor from Saxonica Limited"
 // Homepage: https://www.saxonica.com
 
-// We're sticking with the 11.x line for now because the Gizmo utility in 
-// the 12.x line requires Saxon-PE (due to pulling in XQuery 4.0).
+// Note: the Gizmo utility in the 12.x line requires Saxon-PE (due to pulling in XQuery 4.0).
+// The next maintenance release will resolve this.
 //DEPS net.sf.saxon:Saxon-HE:12.4
 
 // Other dependencies

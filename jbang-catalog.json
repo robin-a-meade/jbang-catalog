@@ -34,6 +34,10 @@
     "Saxon-HE": {
       "script-ref": "scripts/saxonhe.java",
       "java-agents": []
+    },
+    "saxonhea": {
+      "script-ref": "scripts/saxonhea.java",
+      "java-agents": []
     }
   },
   "templates": {}

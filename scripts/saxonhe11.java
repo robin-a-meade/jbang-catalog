@@ -1,20 +1,21 @@
 // This class uses "The Saxon XSLT and XQuery Processor from Saxonica Limited"
 // Homepage: https://www.saxonica.com
 
-// This class, `saxonhe`, uses the latest in the Saxon-HE 12.x line.
+// This class, saxonhe11, uses latest release in the Saxon-HE 11.x line. It for
+// comparing results to the 12.x line.
 
-// For Saxon-HE 11.x, use the `saxonhe11` class.
+// For the 12.x line, use saxonhe.
 
-//DEPS net.sf.saxon:Saxon-HE:12.4
+//DEPS net.sf.saxon:Saxon-HE:11.6
 //DEPS jline:jline:2.14.6
 //DEPS org.ccil.cowan.tagsoup:tagsoup:1.2.1
 //DEPS nu.validator:htmlparser:1.4.16
 
 import java.util.Arrays;
 
-public class saxonhe {
+public class saxonhe11 {
 
-    static String usage = "saxonhe (transform|query|gizmo) OPTIONS";
+    static String usage = "saxonhe11 (transform|query|gizmo) OPTIONS";
 
     public static void main(String[] args) {
         if (args.length < 1) {

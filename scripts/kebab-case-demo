@@ -1,4 +1,16 @@
-#! A shebang line may be added. It will be automatically stripped prior to compiling
+//#! A shebang line may be added. It will be automatically stripped prior to compiling
+
+// WARNING: see issue
+// jbang edit does not commit changes #1570
+// https://github.com/jbangdev/jbang/issues/1570
+//
+// Work arounds:
+// 1) Don't use kebab name. Specify the kebab name only when creating the alias
+// 2) Create a propertly named symlink that points the the kebab-named file. Then,
+//    when editing through jbang, specify the symlink. (You'll lose jbang's ability
+//    to remove the shebang line, through. The shebang line is needed by kubernetes.
+//    If you don't use kubernetes, it is not a problem.)
+
 class KebabCaseDemo {
   static public void main(String[] args) {
     System.out.println("Hello from KebabCaseDemo!");

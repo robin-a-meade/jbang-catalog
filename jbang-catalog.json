@@ -31,12 +31,16 @@
       "script-ref": "scripts/kebab-case-demo",
       "java-agents": []
     },
-    "Saxon-HE": {
-      "script-ref": "scripts/saxonhe.java",
-      "java-agents": []
-    },
     "saxonhea": {
       "script-ref": "scripts/saxonhea.java",
+      "java-agents": []
+    },
+    "saxonhe11": {
+      "script-ref": "scripts/saxonhe11.java",
+      "java-agents": []
+    },
+    "deps-to-classpath": {
+      "script-ref": "scripts/deps-to-classpath",
       "java-agents": []
     }
   },

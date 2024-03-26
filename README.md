@@ -1,5 +1,38 @@
 # jbang-catalog
 
+## scripts
+
+## saxonhe
+
+Uses latest in Saxon-HE in 12.x line.
+
+```
+jbang alias add scripts/saxonhe.java
+jbang app install saxonhe
+```
+
+## saxonhe11
+
+Uses latest in Saxon-HE in 11.x line. (For comparing results with Saxon-HE 12.x)
+
+```
+jbang alias add scripts/saxonhe11.java
+jbang app install saxonhe11
+```
+
+## deps-to-classpath
+
+Given as arguments a list of dependencies in short Gradle form, print
+corresponding class path string using operating system specific path separator.
+The dependencies will, if necessary, be downloaded and installed into the local
+maven repository.
+
+```
+jbang alias add --name=deps-to-classpath scripts/DepsToClasspath.java
+jbang app install deps-to-classpath
+```
+
+
 ## How to check for updates to dependencies?
 
 Discussion:

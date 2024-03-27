@@ -40,7 +40,13 @@
       "java-agents": []
     },
     "deps-to-classpath": {
-      "script-ref": "scripts/deps-to-classpath",
+      "script-ref": "scripts/DepsToClasspath.java",
+      "description": "`deps-to-classpath DEP...`. Resolves dependencies and prints the classpath. Utilizes jbang internals.",
+      "java-agents": []
+    },
+    "jecho": {
+      "script-ref": "scripts/jecho.java",
+      "description": "Print its arguments",
       "java-agents": []
     }
   },

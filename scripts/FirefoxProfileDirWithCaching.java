@@ -1,4 +1,4 @@
-//DEPS org.seleniumhq.selenium:selenium-java:4.17.0
+//DEPS org.seleniumhq.selenium:selenium-java:4.19.0
 
 /**
  * This script determines the location of your firefox profile directory.

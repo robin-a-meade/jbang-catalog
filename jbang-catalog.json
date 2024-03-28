@@ -31,10 +31,6 @@
       "script-ref": "scripts/kebab-case-demo",
       "java-agents": []
     },
-    "Saxon-HE": {
-      "script-ref": "scripts/saxonhe.java",
-      "java-agents": []
-    },
     "saxonhea": {
       "script-ref": "scripts/saxonhea.java",
       "java-agents": []

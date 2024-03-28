@@ -10,43 +10,54 @@
       ],
       "java-agents": []
     },
-    "jargs": {
-      "script-ref": "scripts/jargs.java",
-      "java-agents": []
-    },
-    "saxonhe": {
-      "script-ref": "scripts/saxonhe.java",
-      "dependencies": [],
+    "deps-to-classpath": {
+      "script-ref": "scripts/DepsToClasspath.java",
+      "description": "resolve dependencies and print the classpath\n`deps-to-classpath DEP...`\n",
       "java-agents": []
     },
     "firefox-profile-dir": {
       "script-ref": "scripts/FirefoxProfileDir.java",
+      "description": "print the absolute path to the user\u0027s firefox profile directory\n`firefox-profile-dir`\n",
       "java-agents": []
     },
-    "multiple-files-demo": {
-      "script-ref": "scripts/multiple-files-demo/Main.java",
-      "java-agents": []
-    },
-    "kebab-case-demo": {
-      "script-ref": "scripts/kebab-case-demo",
-      "java-agents": []
-    },
-    "saxonhea": {
-      "script-ref": "scripts/saxonhea.java",
-      "java-agents": []
-    },
-    "saxonhe11": {
-      "script-ref": "scripts/saxonhe11.java",
-      "java-agents": []
-    },
-    "deps-to-classpath": {
-      "script-ref": "scripts/DepsToClasspath.java",
-      "description": "`deps-to-classpath DEP...`. Resolves dependencies and prints the classpath. Utilizes jbang internals.",
+    "firefox-profile-dir-with-caching": {
+      "script-ref": "scripts/FirefoxProfileDirWithCaching.java",
+      "description": "print the absolute path of the user\u0027s firefox profile directory and cache the result for subsequent calls\n`firefox-profile-dir [--fresh] [-v]`\n",
       "java-agents": []
     },
     "jecho": {
       "script-ref": "scripts/jecho.java",
-      "description": "Print its arguments",
+      "description": "print arguments\n`jecho [ARG]...`\n",
+      "java-agents": []
+    },
+    "jargs": {
+      "script-ref": "scripts/jargs.java",
+      "description": "print argument count and then each argument enclosed in angle brackets\n`jargs [ARG]...`\n",
+      "java-agents": []
+    },
+    "kebab-case-demo": {
+      "script-ref": "scripts/kebab-case-demo",
+      "description": "demo of jbang\u0027s support for scripts with kebab-case style name\n`kebab-case-demo`\n",
+      "java-agents": []
+    },
+    "multi-source-file-demo": {
+      "script-ref": "scripts/multi-source-file-demo/Main.java",
+      "description": "demo of jbang\u0027s support for handling multi-source-file java programs\n`multi-source-file-demo [NAME]`\n",
+      "java-agents": []
+    },
+    "saxonhe": {
+      "script-ref": "scripts/saxonhe.java",
+      "description": "simple wrapper for launching Saxon-HE\u0027s command line interfaces for XSLT, XQuery, and the Gizmo utility\n`saxonhe (transform|query|gizmo) OPTIONS`\nThis script uses the *HE* edition of [The Saxon XSLT and XQuery Processor from Saxonica Limited](https://www.saxonica.com).\n**Two HTML SAX parsers are bundled.** To use them, add the `-x:org.ccil.cowan.tagsoup.Parser` or `-x:nu.validator.htmlparser.sax.HtmlParser` option when invoking the *transform* or *query* commands.\n**This variant uses the latest v12.x release.** See the `saxonhe-v11` variant for v11.x.\n",
+      "java-agents": []
+    },
+    "saxonheExp": {
+      "script-ref": "scripts/saxonheExp.java",
+      "description": "experiment with tagsoup modifications\n`saxonhe-exp (transform|query|gizmo) OPTIONS`\n",
+      "java-agents": []
+    },
+    "saxonhe-v11": {
+      "script-ref": "scripts/saxonhe11.java",
+      "description": "simple wrapper for launching Saxon-HE v11.x command line interfaces for XSLT, XQuery, and the Gizmo utility\n`saxonhe-v11 (transform|query|gizmo) OPTIONS`\nThis script uses the *HE* edition of [The Saxon XSLT and XQuery Processor from Saxonica Limited](https://www.saxonica.com).\n**Two HTML SAX parsers are bundled.** To use them, add the `-x:org.ccil.cowan.tagsoup.Parser` or `-x:nu.validator.htmlparser.sax.HtmlParser` option when invoking the *transform* or *query* commands.\n**This variant uses the latest v11.x release.** See the `saxonhe` variant for v12.x.\n",
       "java-agents": []
     }
   },

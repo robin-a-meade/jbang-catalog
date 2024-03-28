@@ -14,11 +14,11 @@ import java.util.Arrays;
 
 public class saxonhe {
 
-    static String usage = "saxonhe (transform|query|gizmo) OPTIONS";
+    static String usage = "usage: saxonhe (transform|query|gizmo) OPTIONS";
 
     public static void main(String[] args) {
         if (args.length < 1) {
-            System.err.println("Missing command");
+            System.err.println("error: a subcommand is required");
             System.err.println(usage);
             System.exit(1);
         }

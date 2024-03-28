@@ -8,9 +8,9 @@ public class Main {
     if (args.length > 0) {
       name = args[0];
     } else {
-      name = "World";
+      name = "world";
     }
     Person p = new Person(name);
-    System.out.println("Hello " + p.getName());
+    System.out.println("hello, " + p.getName());
   }
 }

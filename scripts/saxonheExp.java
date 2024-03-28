@@ -1,24 +1,23 @@
 // This class uses "The Saxon XSLT and XQuery Processor from Saxonica Limited"
 // Homepage: https://www.saxonica.com
 
-// Note: the Gizmo utility in the 12.x line requires Saxon-PE (due to pulling in XQuery 4.0).
-// The next maintenance release will resolve this.
-//DEPS net.sf.saxon:Saxon-HE:12.4
+// This variant is for experimenting with a tagsoup modification that
+// suppresses the reporting of namespaces
 
-// Other dependencies
+//DEPS net.sf.saxon:Saxon-HE:12.4
 //DEPS jline:jline:2.14.6
-//DEPS org.ccil.cowan.tagsoup:tagsoup:1.2.2-alpha-3
+//DEPS org.ccil.cowan.tagsoup:tagsoup:1.2.2-suppress-namespaces
 //DEPS nu.validator:htmlparser:1.4.16
 
 import java.util.Arrays;
 
-public class saxonhea {
+public class saxonheExp {
 
-    static String usage = "saxonhe (transform|query|gizmo) OPTIONS";
+    static String usage = "usage: saxonhe (transform|query|gizmo) OPTIONS";
 
     public static void main(String[] args) {
         if (args.length < 1) {
-            System.err.println("Missing command");
+            System.err.println("error: a subcommand is required");
             System.err.println(usage);
             System.exit(1);
         }

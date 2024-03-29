@@ -43,7 +43,7 @@ public class saxonhe {
                 net.sf.saxon.Gizmo.main(remainingArgs);
                 break;
             default:
-                System.err.println("Invalid command: " + command);
+                System.err.println("error: invalid command: " + command);
                 System.err.println(usage);
                 System.exit(1);
         }

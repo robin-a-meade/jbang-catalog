@@ -5,6 +5,7 @@
 IFS= read -r -d '' description <<'EOF'
 resolve dependencies and print the classpath
 `deps-to-classpath DEP...`
+See also: [`deps_to_classpath`](https://gist.github.com/robin-a-meade/a1237d7ff7cbe6dc159fa32a81c12948) - a shell script wrapper around `jbang info classpath`
 EOF
 jbang alias add \
   --force \
@@ -92,9 +93,9 @@ jbang alias add \
 IFS= read -r -d '' description <<'EOF'
 simple wrapper for launching Saxon-HE's command line interfaces for XSLT, XQuery, and the Gizmo utility
 `saxonhe (transform|query|gizmo) OPTIONS`
-This script uses the *HE* edition of [The Saxon XSLT and XQuery Processor from Saxonica Limited](https://www.saxonica.com).
-**Two HTML SAX parsers are bundled.** To use them, add the `-x:org.ccil.cowan.tagsoup.Parser` or `-x:nu.validator.htmlparser.sax.HtmlParser` option when invoking the *transform* or *query* commands.
-**This variant uses the latest v12.x release.** See the `saxonhe-v11` variant for v11.x.
+This script uses the *HE* edition of [The Saxon XSLT and XQuery Processor](https://www.saxonica.com).
+Two HTML SAX parsers are bundled. To use them, add the `-x:org.ccil.cowan.tagsoup.Parser` or `-x:nu.validator.htmlparser.sax.HtmlParser` option when invoking the *transform* or *query* commands.
+This variant uses the latest v12.x release.** See the `saxonhe-v11` variant for v11.x.
 EOF
 jbang alias add \
   --force \
@@ -107,9 +108,9 @@ jbang alias add \
 IFS= read -r -d '' description <<'EOF'
 simple wrapper for launching Saxon-HE v11.x command line interfaces for XSLT, XQuery, and the Gizmo utility
 `saxonhe-v11 (transform|query|gizmo) OPTIONS`
-This script uses the *HE* edition of [The Saxon XSLT and XQuery Processor from Saxonica Limited](https://www.saxonica.com).
-**Two HTML SAX parsers are bundled.** To use them, add the `-x:org.ccil.cowan.tagsoup.Parser` or `-x:nu.validator.htmlparser.sax.HtmlParser` option when invoking the *transform* or *query* commands.
-**This variant uses the latest v11.x release.** See the `saxonhe` variant for v12.x.
+This script uses the *HE* edition of [The Saxon XSLT and XQuery Processor](https://www.saxonica.com).
+Two HTML SAX parsers are bundled. To use them, add the `-x:org.ccil.cowan.tagsoup.Parser` or `-x:nu.validator.htmlparser.sax.HtmlParser` option when invoking the *transform* or *query* commands.
+This variant uses the latest v11.x release. See the `saxonhe` variant for v12.x.
 EOF
 jbang alias add \
   --force \
@@ -136,8 +137,16 @@ for testing *renovate* dependency automation
 **markdown support test:** newline
 *italics* _italics_ **bold** \
 [link](https://www.jbang.dev)
+Changelog:
+- one
+- two
+```console
+[user@laptop ~] echo hi
+hi
+```
 EOF
 jbang alias add \
+  --force \
   --name=sqlline-test \
   --description="$description" \
   --deps com.oracle.database.jdbc:ojdbc8:23.2.0.0 \

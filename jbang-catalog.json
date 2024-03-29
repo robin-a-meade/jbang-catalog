@@ -3,7 +3,7 @@
   "aliases": {
     "deps-to-classpath": {
       "script-ref": "scripts/DepsToClasspath.java",
-      "description": "resolve dependencies and print the classpath\n`deps-to-classpath DEP...`\n",
+      "description": "resolve dependencies and print the classpath\n`deps-to-classpath DEP...`\nSee also: [`deps_to_classpath`](https://gist.github.com/robin-a-meade/a1237d7ff7cbe6dc159fa32a81c12948) - a shell script wrapper around `jbang info classpath`\n",
       "java-agents": []
     },
     "firefox-profile-dir": {
@@ -38,12 +38,12 @@
     },
     "saxonhe": {
       "script-ref": "scripts/saxonhe.java",
-      "description": "simple wrapper for launching Saxon-HE\u0027s command line interfaces for XSLT, XQuery, and the Gizmo utility\n`saxonhe (transform|query|gizmo) OPTIONS`\nThis script uses the *HE* edition of [The Saxon XSLT and XQuery Processor from Saxonica Limited](https://www.saxonica.com).\n**Two HTML SAX parsers are bundled.** To use them, add the `-x:org.ccil.cowan.tagsoup.Parser` or `-x:nu.validator.htmlparser.sax.HtmlParser` option when invoking the *transform* or *query* commands.\n**This variant uses the latest v12.x release.** See the `saxonhe-v11` variant for v11.x.\n",
+      "description": "simple wrapper for launching Saxon-HE\u0027s command line interfaces for XSLT, XQuery, and the Gizmo utility\n`saxonhe (transform|query|gizmo) OPTIONS`\nThis script uses the *HE* edition of [The Saxon XSLT and XQuery Processor](https://www.saxonica.com).\nTwo HTML SAX parsers are bundled. To use them, add the `-x:org.ccil.cowan.tagsoup.Parser` or `-x:nu.validator.htmlparser.sax.HtmlParser` option when invoking the *transform* or *query* commands.\nThis variant uses the latest v12.x release.** See the `saxonhe-v11` variant for v11.x.\n",
       "java-agents": []
     },
     "saxonhe11": {
       "script-ref": "scripts/saxonhe11.java",
-      "description": "simple wrapper for launching Saxon-HE v11.x command line interfaces for XSLT, XQuery, and the Gizmo utility\n`saxonhe-v11 (transform|query|gizmo) OPTIONS`\nThis script uses the *HE* edition of [The Saxon XSLT and XQuery Processor from Saxonica Limited](https://www.saxonica.com).\n**Two HTML SAX parsers are bundled.** To use them, add the `-x:org.ccil.cowan.tagsoup.Parser` or `-x:nu.validator.htmlparser.sax.HtmlParser` option when invoking the *transform* or *query* commands.\n**This variant uses the latest v11.x release.** See the `saxonhe` variant for v12.x.\n",
+      "description": "simple wrapper for launching Saxon-HE v11.x command line interfaces for XSLT, XQuery, and the Gizmo utility\n`saxonhe-v11 (transform|query|gizmo) OPTIONS`\nThis script uses the *HE* edition of [The Saxon XSLT and XQuery Processor](https://www.saxonica.com).\nTwo HTML SAX parsers are bundled. To use them, add the `-x:org.ccil.cowan.tagsoup.Parser` or `-x:nu.validator.htmlparser.sax.HtmlParser` option when invoking the *transform* or *query* commands.\nThis variant uses the latest v11.x release. See the `saxonhe` variant for v12.x.\n",
       "java-agents": []
     },
     "saxonheX": {
@@ -53,7 +53,7 @@
     },
     "sqlline-test": {
       "script-ref": "sqlline:sqlline:1.11.0",
-      "description": "for testing *renovate* dependency automation\n`sqlline-test [options...] [properties files...]`\n**markdown support test:** newline\n*italics* _italics_ **bold** \\\n[link](https://www.jbang.dev)\n",
+      "description": "for testing *renovate* dependency automation\n`sqlline-test [options...] [properties files...]`\n**markdown support test:** newline\n*italics* _italics_ **bold** \\\n[link](https://www.jbang.dev)\nChangelog:\n- one\n- two\n```console\n[user@laptop ~] echo hi\nhi\n```\n",
       "dependencies": [
         "com.oracle.database.jdbc:ojdbc8:23.2.0.0",
         "com.h2database:h2:2.1.214",

@@ -1,8 +1,7 @@
 // This class uses "The Saxon XSLT and XQuery Processor from Saxonica Limited"
 // Homepage: https://www.saxonica.com
 
-// This variant is for experimenting with a tagsoup modification that
-// suppresses the reporting of namespaces
+// This variant is for experimenting with a tagsoup modifications
 
 //DEPS net.sf.saxon:Saxon-HE:12.4
 //DEPS jline:jline:2.14.6
@@ -11,7 +10,7 @@
 
 import java.util.Arrays;
 
-public class saxonheExp {
+public class saxonheX {
 
     static String usage = "usage: saxonhe (transform|query|gizmo) OPTIONS";
 

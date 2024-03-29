@@ -102,7 +102,7 @@ jbang alias add \
   scripts/saxonhe.java
 
 
-## saxonhe-v11 ##############################################################
+## saxonhe11 ################################################################
 
 IFS= read -r -d '' description <<'EOF'
 simple wrapper for launching Saxon-HE v11.x command line interfaces for XSLT, XQuery, and the Gizmo utility
@@ -113,36 +113,35 @@ This script uses the *HE* edition of [The Saxon XSLT and XQuery Processor from S
 EOF
 jbang alias add \
   --force \
-  --name saxonhe-v11 \
   --description="$description" \
   scripts/saxonhe11.java
 
-## saxonhe-exp ##############################################################
+## saxonheX #################################################################
 
 IFS= read -r -d '' description <<'EOF'
-experiment with tagsoup modifications
+for experimenting with tagsoup modifications
 `saxonhe-exp (transform|query|gizmo) OPTIONS`
 EOF
 jbang alias add \
   --force \
   --description="$description" \
-  scripts/saxonheExp.java
+  scripts/saxonheX.java
 
 
+## sqlline-test ##############################################################
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+IFS= read -r -d '' description <<'EOF'
+for testing *renovate* dependency automation
+`sqlline-test [options...] [properties files...]`
+**markdown support test:** newline
+*italics* _italics_ **bold** \
+[link](https://www.jbang.dev)
+EOF
+jbang alias add \
+  --name=sqlline-test \
+  --description="$description" \
+  --deps com.oracle.database.jdbc:ojdbc8:23.2.0.0 \
+  --deps com.h2database:h2:2.1.214 \
+  --deps org.postgresql:postgresql:42.3.1 \
+  sqlline:sqlline:1.11.0
 

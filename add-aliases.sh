@@ -114,7 +114,7 @@ IFS= read -r -d '' description <<'EOF'
 wrapper for launching Saxon-HE's command line interfaces for XSLT, XQuery, and the Gizmo utility
 `saxonhe (transform|query|gizmo) OPTIONS`
 This script uses the *HE* edition of [The Saxon XSLT and XQuery Processor](https://www.saxonica.com).
-Two HTML SAX parsers are bundled. To use them, add either the `-x:org.ccil.cowan.tagsoup.Parser` or `-x:nu.validator.htmlparser.sax.HtmlParser` option when invoking the *transform* or *query* commands.
+This script bundles two HTML SAX parsers. To use them, specify the `-x:org.ccil.cowan.tagsoup.Parser` or `-x:nu.validator.htmlparser.sax.HtmlParser` option when invoking the *transform* or *query* commands.
 This variant uses the latest in the v12.x line of releases. See the `saxonhe11` variant for v11.x.
 EOF
 jbang alias add \
@@ -129,7 +129,7 @@ IFS= read -r -d '' description <<'EOF'
 simple wrapper for launching Saxon-HE v11.x command line interfaces for XSLT, XQuery, and the Gizmo utility
 `saxonhe11 (transform|query|gizmo) OPTIONS`
 This script uses the *HE* edition of [The Saxon XSLT and XQuery Processor](https://www.saxonica.com).
-Two HTML SAX parsers are bundled. To use them, add either the `-x:org.ccil.cowan.tagsoup.Parser` or `-x:nu.validator.htmlparser.sax.HtmlParser` option when invoking the *transform* or *query* commands.
+This script bundles two HTML SAX parsers. To use them, specify the `-x:org.ccil.cowan.tagsoup.Parser` or `-x:nu.validator.htmlparser.sax.HtmlParser` option when invoking the *transform* or *query* commands.
 This variant uses the latest in the v11.x line of releases. See the `saxonhe` variant for v12.x.
 EOF
 jbang alias add \

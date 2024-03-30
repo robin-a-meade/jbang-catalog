@@ -1,17 +1,36 @@
 #!/bin/bash
 
+# Allow the user to specify the home directory of the scripts using an
+# environment variable. This allows the user to execute this bash script from
+# their home directory to register all the aliases into their
+# `~/.jbang/jbang-catalog.json` catalog.
+#
+#   [user@laptop ~]$ SCRIPTS_HOME=./path/to/repo/"$SCRIPTS_HOME"
+#if [[ -z SCRIPTS_HOME ]]; then
+  # If SCRIPTS_HOME is not set, initialize it to be the 'scripts' subdirectory
+  # relative to this bash script. (The use of `readlink -f` is to make this
+  # operation symlink-safe. See https://stackoverflow.com/a/51651602)
+SCRIPTS_HOME=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/scripts
+readonly SCRIPTS_HOME
+#else
+  # The user supplied the SCRIPTS_HOME environment variable pointing
+  # to the locaton of the scripts. Use that.
+#  true
+#fi
+
 ## deps-to-classpath ########################################################
 
 IFS= read -r -d '' description <<'EOF'
 resolve dependencies and print the classpath
 `deps-to-classpath DEP...`
-See also: [`deps_to_classpath`](https://gist.github.com/robin-a-meade/a1237d7ff7cbe6dc159fa32a81c12948) - a shell script wrapper around `jbang info classpath`
+Alternative: `deps_to_classpath DEP...` [deps_to_classpath](https://gist.github.com/robin-a-meade/a1237d7ff7cbe6dc159fa32a81c12948) is a shell script wrapper around `jbang info classpath`
+Alternative: `jbang jecho@robin-a-meade "%{deps:$(IFS=,; echo "${DEPS[*]}")}"`, where `DEPS` is an array of dependencies.
 EOF
 jbang alias add \
   --force \
   --name=deps-to-classpath \
   --description="$description" \
-  scripts/DepsToClasspath.java
+  "$SCRIPTS_HOME"/DepsToClasspath.java
 
 
 ## firefox-profile-dir ######################################################
@@ -24,7 +43,7 @@ jbang alias add \
   --force \
   --name=firefox-profile-dir \
   --description="$description" \
-  scripts/FirefoxProfileDir.java
+  "$SCRIPTS_HOME"/FirefoxProfileDir.java
 
 
 ## firefox-profile-dir-with-caching #########################################
@@ -37,7 +56,7 @@ jbang alias add \
   --force \
   --name=firefox-profile-dir-with-caching \
   --description="$description" \
-  scripts/FirefoxProfileDirWithCaching.java
+  "$SCRIPTS_HOME"/FirefoxProfileDirWithCaching.java
 
 
 ## jecho ####################################################################
@@ -49,19 +68,20 @@ EOF
 jbang alias add \
   --force \
   --description="$description" \
-  scripts/jecho.java
+  "$SCRIPTS_HOME"/jecho.java
 
 
 ## jargs ####################################################################
 
 IFS= read -r -d '' description <<'EOF'
-print argument count and then each argument enclosed in angle brackets
+print the argument count and print each argument enclosed in angle brackets
 `jargs [ARG]...`
 EOF
 jbang alias add \
   --force \
   --description="$description" \
-  scripts/jargs.java
+  "$SCRIPTS_HOME"/jargs.java
+
 
 ## kebab-case-demo ##########################################################
 
@@ -72,7 +92,7 @@ EOF
 jbang alias add \
   --force \
   --description="$description" \
-  scripts/kebab-case-demo
+  "$SCRIPTS_HOME"/kebab-case-demo
 
 
 ## multi-source-file-demo ######################################################
@@ -85,64 +105,55 @@ jbang alias add \
   --force \
   --name=multi-source-file-demo \
   --description="$description" \
-  scripts/multi-source-file-demo/Main.java
+  "$SCRIPTS_HOME"/multi-source-file-demo/Main.java
 
 
 ## saxonhe ##################################################################
 
 IFS= read -r -d '' description <<'EOF'
-simple wrapper for launching Saxon-HE's command line interfaces for XSLT, XQuery, and the Gizmo utility
+wrapper for launching Saxon-HE's command line interfaces for XSLT, XQuery, and the Gizmo utility
 `saxonhe (transform|query|gizmo) OPTIONS`
 This script uses the *HE* edition of [The Saxon XSLT and XQuery Processor](https://www.saxonica.com).
-Two HTML SAX parsers are bundled. To use them, add the `-x:org.ccil.cowan.tagsoup.Parser` or `-x:nu.validator.htmlparser.sax.HtmlParser` option when invoking the *transform* or *query* commands.
-This variant uses the latest v12.x release.** See the `saxonhe-v11` variant for v11.x.
+Two HTML SAX parsers are bundled. To use them, add either the `-x:org.ccil.cowan.tagsoup.Parser` or `-x:nu.validator.htmlparser.sax.HtmlParser` option when invoking the *transform* or *query* commands.
+This variant uses the latest in the v12.x line of releases. See the `saxonhe11` variant for v11.x.
 EOF
 jbang alias add \
   --force \
   --description="$description" \
-  scripts/saxonhe.java
+  "$SCRIPTS_HOME"/saxonhe.java
 
 
 ## saxonhe11 ################################################################
 
 IFS= read -r -d '' description <<'EOF'
 simple wrapper for launching Saxon-HE v11.x command line interfaces for XSLT, XQuery, and the Gizmo utility
-`saxonhe-v11 (transform|query|gizmo) OPTIONS`
+`saxonhe11 (transform|query|gizmo) OPTIONS`
 This script uses the *HE* edition of [The Saxon XSLT and XQuery Processor](https://www.saxonica.com).
-Two HTML SAX parsers are bundled. To use them, add the `-x:org.ccil.cowan.tagsoup.Parser` or `-x:nu.validator.htmlparser.sax.HtmlParser` option when invoking the *transform* or *query* commands.
-This variant uses the latest v11.x release. See the `saxonhe` variant for v12.x.
+Two HTML SAX parsers are bundled. To use them, add either the `-x:org.ccil.cowan.tagsoup.Parser` or `-x:nu.validator.htmlparser.sax.HtmlParser` option when invoking the *transform* or *query* commands.
+This variant uses the latest in the v11.x line of releases. See the `saxonhe` variant for v12.x.
 EOF
 jbang alias add \
   --force \
   --description="$description" \
-  scripts/saxonhe11.java
+  "$SCRIPTS_HOME"/saxonhe11.java
 
 ## saxonheX #################################################################
 
 IFS= read -r -d '' description <<'EOF'
-for experimenting with tagsoup modifications
+experiment with tagsoup modifications
 `saxonhe-exp (transform|query|gizmo) OPTIONS`
 EOF
 jbang alias add \
   --force \
   --description="$description" \
-  scripts/saxonheX.java
+  "$SCRIPTS_HOME"/saxonheX.java
 
 
 ## sqlline-test ##############################################################
 
 IFS= read -r -d '' description <<'EOF'
-for testing *renovate* dependency automation
+test of *renovate* dependency automation
 `sqlline-test [options...] [properties files...]`
-**markdown support test:** newline
-*italics* _italics_ **bold** \
-[link](https://www.jbang.dev)
-Changelog:
-- one
-- two
-```console
-[user@laptop ~] echo hi
-hi
 ```
 EOF
 jbang alias add \
@@ -154,3 +165,15 @@ jbang alias add \
   --deps org.postgresql:postgresql:42.3.1 \
   sqlline:sqlline:1.11.0
 
+
+## tagsoup ##################################################################
+
+IFS= read -r -d '' description <<'EOF'
+convert nasty, ugly HTML to clean XHTML (John Cowan's tagsoup 1.2.1)
+`tagsoup [OPTIONS] [FILES]`
+```
+EOF
+jbang alias add \
+  --force \
+  --description="$description" \
+  org.ccil.cowan.tagsoup:tagsoup:1.2.1

@@ -1,22 +1,10 @@
 #!/bin/bash
 
-# Allow the user to specify the home directory of the scripts using an
-# environment variable. This allows the user to execute this bash script from
-# their home directory to register all the aliases into their
-# `~/.jbang/jbang-catalog.json` catalog.
-#
-#   [user@laptop ~]$ SCRIPTS_HOME=./path/to/repo/"$SCRIPTS_HOME"
-#if [[ -z SCRIPTS_HOME ]]; then
-  # If SCRIPTS_HOME is not set, initialize it to be the 'scripts' subdirectory
-  # relative to this bash script. (The use of `readlink -f` is to make this
-  # operation symlink-safe. See https://stackoverflow.com/a/51651602)
-SCRIPTS_HOME=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/scripts
-readonly SCRIPTS_HOME
-#else
-  # The user supplied the SCRIPTS_HOME environment variable pointing
-  # to the locaton of the scripts. Use that.
-#  true
-#fi
+# Initialize REPO_DIR to the directory containing this script
+# (The use of `readlink -f` is to make this operation symlink-safe. See
+# https://stackoverflow.com/a/51651602)
+REPO_DIR=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
+readonly REPO_dir
 
 ## deps-to-classpath ########################################################
 
@@ -30,8 +18,7 @@ jbang alias add \
   --force \
   --name=deps-to-classpath \
   --description="$description" \
-  "$SCRIPTS_HOME"/DepsToClasspath.java
-
+  "$REPO_DIR"/scripts/DepsToClasspath.java
 
 ## firefox-profile-dir ######################################################
 
@@ -43,8 +30,7 @@ jbang alias add \
   --force \
   --name=firefox-profile-dir \
   --description="$description" \
-  "$SCRIPTS_HOME"/FirefoxProfileDir.java
-
+  "$REPO_DIR"/scripts/FirefoxProfileDir.java
 
 ## firefox-profile-dir-with-caching #########################################
 
@@ -56,8 +42,7 @@ jbang alias add \
   --force \
   --name=firefox-profile-dir-with-caching \
   --description="$description" \
-  "$SCRIPTS_HOME"/FirefoxProfileDirWithCaching.java
-
+  "$REPO_DIR"/scripts/FirefoxProfileDirWithCaching.java
 
 ## jecho ####################################################################
 
@@ -68,8 +53,7 @@ EOF
 jbang alias add \
   --force \
   --description="$description" \
-  "$SCRIPTS_HOME"/jecho.java
-
+  "$REPO_DIR"/scripts/jecho.java
 
 ## jargs ####################################################################
 
@@ -80,8 +64,7 @@ EOF
 jbang alias add \
   --force \
   --description="$description" \
-  "$SCRIPTS_HOME"/jargs.java
-
+  "$REPO_DIR"/scripts/jargs.java
 
 ## kebab-case-demo ##########################################################
 
@@ -92,8 +75,7 @@ EOF
 jbang alias add \
   --force \
   --description="$description" \
-  "$SCRIPTS_HOME"/kebab-case-demo
-
+  "$REPO_DIR"/scripts/kebab-case-demo
 
 ## multi-source-file-demo ######################################################
 
@@ -105,8 +87,7 @@ jbang alias add \
   --force \
   --name=multi-source-file-demo \
   --description="$description" \
-  "$SCRIPTS_HOME"/multi-source-file-demo/Main.java
-
+  "$REPO_DIR"/scripts/multi-source-file-demo/Main.java
 
 ## saxonhe ##################################################################
 
@@ -120,8 +101,7 @@ EOF
 jbang alias add \
   --force \
   --description="$description" \
-  "$SCRIPTS_HOME"/saxonhe.java
-
+  "$REPO_DIR"/scripts/saxonhe.java
 
 ## saxonhe11 ################################################################
 
@@ -135,7 +115,7 @@ EOF
 jbang alias add \
   --force \
   --description="$description" \
-  "$SCRIPTS_HOME"/saxonhe11.java
+  "$REPO_DIR"/scripts/saxonhe11.java
 
 ## saxonheX #################################################################
 
@@ -146,15 +126,13 @@ EOF
 jbang alias add \
   --force \
   --description="$description" \
-  "$SCRIPTS_HOME"/saxonheX.java
-
+  "$REPO_DIR"/scripts/saxonheX.java
 
 ## sqlline-test ##############################################################
 
 IFS= read -r -d '' description <<'EOF'
 test of *renovate* dependency automation
 `sqlline-test [options...] [properties files...]`
-```
 EOF
 jbang alias add \
   --force \
@@ -165,13 +143,11 @@ jbang alias add \
   --deps org.postgresql:postgresql:42.3.1 \
   sqlline:sqlline:1.11.0
 
-
 ## tagsoup ##################################################################
 
 IFS= read -r -d '' description <<'EOF'
-convert nasty, ugly HTML to clean XHTML (John Cowan's tagsoup 1.2.1)
+convert HTML to well-formed XML (John Cowan's tagsoup 1.2.1)
 `tagsoup [OPTIONS] [FILES]`
-```
 EOF
 jbang alias add \
   --force \

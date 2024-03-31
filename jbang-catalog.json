@@ -38,12 +38,12 @@
     },
     "saxonhe": {
       "script-ref": "scripts/saxonhe.java",
-      "description": "wrapper for launching Saxon-HE\u0027s command line interfaces for XSLT, XQuery, and the Gizmo utility\n`saxonhe (transform|query|gizmo) OPTIONS`\nThis script uses the *HE* edition of [The Saxon XSLT and XQuery Processor](https://www.saxonica.com).\nTwo HTML SAX parsers are bundled. To use them, add either the `-x:org.ccil.cowan.tagsoup.Parser` or `-x:nu.validator.htmlparser.sax.HtmlParser` option when invoking the *transform* or *query* commands.\nThis variant uses the latest in the v12.x line of releases. See the `saxonhe11` variant for v11.x.\n",
+      "description": "wrapper for launching Saxon-HE\u0027s command line interfaces for XSLT, XQuery, and the Gizmo utility\n`saxonhe (transform|query|gizmo) OPTIONS`\nThis script uses the *HE* edition of [The Saxon XSLT and XQuery Processor](https://www.saxonica.com).\nThis script bundles two HTML SAX parsers. To use them, specify the `-x:org.ccil.cowan.tagsoup.Parser` or `-x:nu.validator.htmlparser.sax.HtmlParser` option when invoking the *transform* or *query* commands.\nThis variant uses the latest in the v12.x line of releases. See the `saxonhe11` variant for v11.x.\n",
       "java-agents": []
     },
     "saxonhe11": {
       "script-ref": "scripts/saxonhe11.java",
-      "description": "simple wrapper for launching Saxon-HE v11.x command line interfaces for XSLT, XQuery, and the Gizmo utility\n`saxonhe11 (transform|query|gizmo) OPTIONS`\nThis script uses the *HE* edition of [The Saxon XSLT and XQuery Processor](https://www.saxonica.com).\nTwo HTML SAX parsers are bundled. To use them, add either the `-x:org.ccil.cowan.tagsoup.Parser` or `-x:nu.validator.htmlparser.sax.HtmlParser` option when invoking the *transform* or *query* commands.\nThis variant uses the latest in the v11.x line of releases. See the `saxonhe` variant for v12.x.\n",
+      "description": "simple wrapper for launching Saxon-HE v11.x command line interfaces for XSLT, XQuery, and the Gizmo utility\n`saxonhe11 (transform|query|gizmo) OPTIONS`\nThis script uses the *HE* edition of [The Saxon XSLT and XQuery Processor](https://www.saxonica.com).\nThis script bundles two HTML SAX parsers. To use them, specify the `-x:org.ccil.cowan.tagsoup.Parser` or `-x:nu.validator.htmlparser.sax.HtmlParser` option when invoking the *transform* or *query* commands.\nThis variant uses the latest in the v11.x line of releases. See the `saxonhe` variant for v12.x.\n",
       "java-agents": []
     },
     "saxonheX": {
@@ -53,7 +53,7 @@
     },
     "sqlline-test": {
       "script-ref": "sqlline:sqlline:1.11.0",
-      "description": "test of *renovate* dependency automation\n`sqlline-test [options...] [properties files...]`\n```\n",
+      "description": "test of *renovate* dependency automation\n`sqlline-test [options...] [properties files...]`\n",
       "dependencies": [
         "com.oracle.database.jdbc:ojdbc8:23.2.0.0",
         "com.h2database:h2:2.1.214",
@@ -63,7 +63,7 @@
     },
     "tagsoup": {
       "script-ref": "org.ccil.cowan.tagsoup:tagsoup:1.2.1",
-      "description": "convert nasty, ugly HTML to clean XHTML (John Cowan\u0027s tagsoup 1.2.1)\n`tagsoup [OPTIONS] [FILES]`\n```\n",
+      "description": "convert HTML to well-formed XML (John Cowan\u0027s tagsoup 1.2.1)\n`tagsoup [OPTIONS] [FILES]`\n",
       "java-agents": []
     }
   },

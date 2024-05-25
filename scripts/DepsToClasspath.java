@@ -1,5 +1,5 @@
 //DEPS dev.jbang:jbang-cli:0.116.0
-//DEPS org.apache.maven:maven-model:3.9.6
+//DEPS org.apache.maven:maven-model:3.9.7
 
 // NAME
 //      deps-to-classpath - resolve dependencies and print classpath

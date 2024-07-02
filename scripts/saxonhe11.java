@@ -6,7 +6,7 @@
 
 // For the 12.x line, use saxonhe.
 
-//DEPS net.sf.saxon:Saxon-HE:11.6
+//DEPS net.sf.saxon:Saxon-HE:12.5
 //DEPS jline:jline:2.14.6
 //DEPS org.ccil.cowan.tagsoup:tagsoup:1.2.1
 //DEPS nu.validator:htmlparser:1.4.16

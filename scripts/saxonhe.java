@@ -5,7 +5,7 @@
 
 // For Saxon-HE 11.x, use the `saxonhe11` class.
 
-//DEPS net.sf.saxon:Saxon-HE:12.4
+//DEPS net.sf.saxon:Saxon-HE:12.5
 //DEPS jline:jline:2.14.6
 //DEPS org.ccil.cowan.tagsoup:tagsoup:1.2.1
 //DEPS nu.validator:htmlparser:1.4.16

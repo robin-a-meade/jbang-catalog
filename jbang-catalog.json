@@ -52,7 +52,7 @@
       "java-agents": []
     },
     "sqlline-test": {
-      "script-ref": "sqlline:sqlline:1.11.0",
+      "script-ref": "sqlline:sqlline:1.12.0",
       "description": "test of *renovate* dependency automation\n`sqlline-test [options...] [properties files...]`\n",
       "dependencies": [
         "com.oracle.database.jdbc:ojdbc8:23.6.0.24.10",

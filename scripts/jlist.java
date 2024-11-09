@@ -7,7 +7,8 @@ public class jlist {
         System.out.println("Current working directory: " + pwd);
 
         // List the files in the current working directory
-        File dir = new File(pwd);
+        //File dir = new File(pwd);
+        File dir = new File("/ws");
         File[] filesList = dir.listFiles();
 
         if (filesList != null) {

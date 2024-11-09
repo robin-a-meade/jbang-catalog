@@ -52,18 +52,23 @@
       "java-agents": []
     },
     "sqlline-test": {
-      "script-ref": "sqlline:sqlline:1.12.0",
+      "script-ref": "sqlline:sqlline:1.11.0",
       "description": "test of *renovate* dependency automation\n`sqlline-test [options...] [properties files...]`\n",
       "dependencies": [
-        "com.oracle.database.jdbc:ojdbc8:23.6.0.24.10",
+        "com.oracle.database.jdbc:ojdbc8:23.2.0.0",
         "com.h2database:h2:2.1.214",
-        "org.postgresql:postgresql:42.7.4"
+        "org.postgresql:postgresql:42.3.1"
       ],
       "java-agents": []
     },
     "tagsoup": {
       "script-ref": "org.ccil.cowan.tagsoup:tagsoup:1.2.1",
       "description": "convert HTML to well-formed XML (John Cowan\u0027s tagsoup 1.2.1)\n`tagsoup [OPTIONS] [FILES]`\n",
+      "java-agents": []
+    },
+    "jlist": {
+      "script-ref": "scripts/jlist.java",
+      "description": "demo\n`jlist [ARG]...`\n",
       "java-agents": []
     }
   },

@@ -66,6 +66,18 @@ jbang alias add \
   --description="$description" \
   "$REPO_DIR"/scripts/jargs.java
 
+## jlist ####################################################################
+
+IFS= read -r -d '' description <<'EOF'
+demo
+`jlist [ARG]...`
+EOF
+jbang alias add \
+  --force \
+  --description="$description" \
+  "$REPO_DIR"/scripts/jlist.java
+
+
 ## kebab-case-demo ##########################################################
 
 IFS= read -r -d '' description <<'EOF'

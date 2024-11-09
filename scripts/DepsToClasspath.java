@@ -1,4 +1,4 @@
-//DEPS dev.jbang:jbang-cli:0.116.0
+//DEPS dev.jbang:jbang-cli:0.119.0
 //DEPS org.apache.maven:maven-model:3.9.6
 
 // NAME

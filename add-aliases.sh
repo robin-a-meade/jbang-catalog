@@ -36,7 +36,7 @@ jbang alias add \
 
 IFS= read -r -d '' description <<'EOF'
 print the absolute path of the user's firefox profile directory and cache the result for subsequent calls
-`firefox-profile-dir [--fresh] [-v]`
+`firefox-profile-dir-with-caching [--fresh] [-v]`
 EOF
 jbang alias add \
   --force \

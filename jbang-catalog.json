@@ -13,7 +13,7 @@
     },
     "firefox-profile-dir-with-caching": {
       "script-ref": "scripts/FirefoxProfileDirWithCaching.java",
-      "description": "print the absolute path of the user\u0027s firefox profile directory and cache the result for subsequent calls\n`firefox-profile-dir [--fresh] [-v]`\n",
+      "description": "print the absolute path of the user\u0027s firefox profile directory and cache the result for subsequent calls\n`firefox-profile-dir-with-caching [--fresh] [-v]`\n",
       "java-agents": []
     },
     "jecho": {

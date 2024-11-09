@@ -3,7 +3,7 @@
 
 // This variant is for experimenting with a tagsoup modifications
 
-//DEPS net.sf.saxon:Saxon-HE:12.4
+//DEPS net.sf.saxon:Saxon-HE:12.5
 //DEPS jline:jline:2.14.6
 //DEPS org.ccil.cowan.tagsoup:tagsoup:1.2.2-suppress-namespaces
 //DEPS nu.validator:htmlparser:1.4.16

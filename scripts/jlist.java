@@ -2,6 +2,7 @@ import java.io.File;
 
 public class jlist {
     public static void main(String[] args) {
+        System.out.println("jlist 0.1.1");
         // Get the current working directory
         String pwd = System.getProperty("user.dir");
         System.out.println("Current working directory: " + pwd);
